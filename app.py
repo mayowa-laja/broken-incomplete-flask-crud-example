@@ -22,8 +22,14 @@ def add():
   s='''INSERT INTO students(studentName, email) VALUES('{}','{}');'''.format(name,email) # kludge - use stored proc or params
   cur.execute(s)
   mysql.connection.commit()
-
-  return '{"Result":"Success"}' # Really? maybe we should check!
+  
+  s='SELECT * FROM students WHERE name = {}'.format(name)
+  cur.execute(s)
+  row = cursor.fetchone()
+  if row is not None:
+    return '{"Result":"Success"}' # Really? maybe we should check!
+  else:
+    return '{"Result":"Fail"}'
   
 @app.route("/") #Default - Show Data
 def read(): # Name of the method
